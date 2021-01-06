@@ -1,0 +1,9 @@
+class VirtualPad {
+    constructor(){
+
+    }
+    
+    toHTML(){
+
+    }
+}
