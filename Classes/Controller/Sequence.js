@@ -4,7 +4,8 @@ class Sequence {
     this.restColor = restColor;
     this.playHeadColor = playHeadColor;
     this.voidColor = voidColor;
-    this.realPad = new RealPad();
+    this.padModel = new PadModel();
+    this.smartPadConverter = new SmartPadConverter();
     this.accessMIDI = new AccessMIDI();
     this.getMIDIMessages = this.accessMIDI.getMIDIMessages();
     this.incrementSequenceNumber();
@@ -18,9 +19,9 @@ class Sequence {
   }
 
   sendRowColor(row, color) {
-    let rowStart = this.realPad.getPadRow(row);
+    let rowStart = this.smartPadConverter.getPadRow(row);
     console.log("rowStart", rowStart);
-    let currentColor = this.realPad.getPadColor(color);
+    let currentColor = this.smartPadConverter.getPadColor(color);
     console.log("currentColor", currentColor);
 
     for (let i = 0; i <= 8; i++) {
@@ -28,18 +29,16 @@ class Sequence {
       this.accessMIDI.sendMIDI([144, i + rowStart, currentColor]);
     }
   }
-  
+
   changePadColor(row, col, color) {
-    let padOn = this.realPad.sendPadColor(row, col, color, "on");
-    let padOff = this.realPad.sendPadColor(row, col, color, "off");
-    this.accessMIDI.sendMIDI(padOff);
-    this.accessMIDI.sendMIDI(padOn);
+    this.accessMIDI.sendPadColor(row, col, color, "on");
+    this.accessMIDI.sendPadColor(row, col, color, "off");
   }
 
   advancePlayHead() {
     //return midi message for a playhead representative
     //turn off previous playhead pad using pad store
-    //update realpad
+    //update smartPadConverter
     //update virtualpad
     //update padstore
   }
