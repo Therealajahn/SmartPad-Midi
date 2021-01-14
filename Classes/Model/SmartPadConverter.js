@@ -20,11 +20,27 @@ class SmartPadConverter {
       7: 96, // to 103
       8: 112, // to 114
     };
+    this.padCols = {
+      1: 0,
+      2: 1,
+      3: 2,
+      4: 3,
+      5: 4,
+      6: 5,
+      7: 6,
+      8: 7,
+    };
   }
   getPadColor(color) {
     return this.padColors[color];
   }
   getPadRow(row) {
     return this.padRows[row];
+  }
+  getPadColumn(col) {
+    return this.padCols[col];
+  }
+  getPadRowAndColumn(row, col) {
+    return [this.padRows[row], this.padCols[col]];
   }
 }

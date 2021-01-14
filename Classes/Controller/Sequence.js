@@ -1,28 +1,25 @@
 class Sequence {
-  constructor(backgroundColor, restColor, playHeadColor, voidColor) {
-    this.backgroundColor = backgroundColor;
-    this.restColor = restColor;
-    this.playHeadColor = playHeadColor;
-    this.voidColor = voidColor;
+  constructor(playHeadCol, playHeadRow) {
     this.padModel = new PadModel();
     this.smartPadConverter = new SmartPadConverter();
     this.accessMIDI = new AccessMIDI();
     this.getMIDIMessages = this.accessMIDI.getMIDIMessages();
     this.incrementSequenceNumber();
+    this.playHeadCol = playHeadCol;
+    this.playHeadRow = playHeadRow;
+    this.playHeadRowChange = false;
+    this.playHeadAtEnd = false;
   }
   //store sequence Number across instances
   static sequenceNum = 0;
 
   incrementSequenceNumber() {
     Sequence.sequenceNum += 1;
-    console.log("yes");
   }
 
   sendRowColor(row, color) {
     let rowStart = this.smartPadConverter.getPadRow(row);
-    console.log("rowStart", rowStart);
     let currentColor = this.smartPadConverter.getPadColor(color);
-    console.log("currentColor", currentColor);
 
     for (let i = 0; i <= 8; i++) {
       this.accessMIDI.sendMIDI([128, i + rowStart, currentColor]);
@@ -31,26 +28,85 @@ class Sequence {
   }
 
   changePadColor(row, col, color) {
-    this.accessMIDI.sendPadColor(row, col, color, "on");
-    this.accessMIDI.sendPadColor(row, col, color, "off");
+    //convert color to midi
+    let padColor = this.smartPadConverter.getPadColor(color);
+    //convert row and column to midi
+    let [padRow, padColumn] = this.smartPadConverter.getPadRowAndColumn(
+      row,
+      col
+    );
+    let padNumber = padRow + padColumn;
+    //send midi to pad
+    this.accessMIDI.sendMIDI([128, padNumber, padColor]);
+    this.accessMIDI.sendMIDI([144, padNumber, padColor]);
   }
 
-  advancePlayHead() {
-    //return midi message for a playhead representative
-    //turn off previous playhead pad using pad store
-    //update smartPadConverter
-    //update virtualpad
-    //update padstore
+  advanceAlongWidthAndLength(widthStart, widthEnd, lengthStart, lengthEnd) {
+    if (widthEnd > 8) {
+      throw new Error("Keep widthEnd under 8 please");
+    } else if (widthStart <= 0) {
+      throw new Error("Keep widthStart over 0 please");
+    }
+
+    let playHeadX = this.playHeadCol;
+    let playHeadY = this.playHeadRow;
+
+    if (this.playHeadAtEnd) {
+      console.log('palyhead at end');
+      this.removePastPlayhead(widthEnd, lengthEnd);
+      this.playHeadAtEnd = false;
+    }
+
+    if (this.rowChanged) {
+      console.log('row changed');
+      this.removePastPlayhead(widthEnd, this.playHeadRow - 1);
+      this.rowChanged = false;
+    }
+    if (playHeadX !== 1) {
+      console.log("playhead not at beginning");
+      this.removePastPlayhead(playHeadX - 1, this.playHeadRow);
+    } else if (playHeadX === 1) {
+      console.log('playhead at beginning')
+      this.removePastPlayhead(widthEnd, this.playHeadRow);
+    }
+
+    // value of playHeadX is adjusted so that its in 1-8 format
+    this.padModel.setOverModelPad(playHeadX, 1, "red");
+    console.log("overModelRow", this.padModel.getOverModelRow(1));
+
+    this.changePadColor(this.playHeadRow, playHeadX, "red");
+    if (playHeadX === widthEnd && playHeadY === lengthEnd) {
+      console.log("playhead at end");
+      this.playHeadCol = widthStart;
+      this.playHeadRow = lengthStart;
+      this.playHeadAtEnd = true;
+    } else if (playHeadX === widthEnd) {
+      console.log('playhead at width end');
+      this.playHeadCol = widthStart;
+      this.playHeadRow += 1;
+      this.rowChanged = true;
+      console.log("this.playHeadRow", this.playHeadRow);
+    } else {
+      this.playHeadCol += 1;
+    }
+    return this.playHeadCol;
   }
 
-  addTrigger() {
-    //toggle between black and white to indicate the triggering of
-    //update model of pad
-    //update real pad
-    //upate virtual pad
+  removePastPlayhead(pastplayHeadCol, row) {
+    console.log('pastplayHeadCol, row', pastplayHeadCol, row)
+    
+
+    this.padModel.setOverModelPad(pastplayHeadCol, row, "blank");
+    this.changePadColor(
+      row,
+      pastplayHeadCol,
+      this.padModel.getUnderModelPad(pastplayHeadCol, row)
+    );
   }
 
-  createSequence() {
-    //create two rows of pads that are the same color
+  createSequenceRows(start, numberOfRows, color) {
+    for (let i = start; i < numberOfRows + 1; i++) {
+      this.sendRowColor(i, color);
+    }
   }
 }

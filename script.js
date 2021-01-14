@@ -1,29 +1,29 @@
-let sequenceOne = new Sequence();
-let sequenceTwo = new Sequence();
-let sequenceThree = new Sequence();
-let sequenceFour = new Sequence();
-let col = 0;
-let playhead = 0;
+document.querySelector("button").addEventListener("click", async () => {
+  window.AudioContext =
+    (await window.AudioContext) || window.webkitAudioContext;
+});
 
-// setInterval(() => {
-//   col = col % 8;
-//   playhead = col + 1;
-//   sequenceOne.changePadColor(playhead, 1, "red");
-//   sequenceTwo.changePadColor(playhead, 3, "red");
-//   sequenceThree.changePadColor(playhead, 5, "red");
-//   sequenceFour.changePadColor(playhead, 7, "red");
-//   col++;
-// }, 500);
+let context = new AudioContext();
+let start = context.currentTime;
+let tempo = 120;
+let beatsLength = 60 / tempo;
+let notes = [
+  { note: "1", time: beatsLength },
+  { note: "2", time: beatsLength * 2 },
+  { note: "3", time: beatsLength * 3 },
+  { note: "4", time: beatsLength * 4 },
+  { note: "5", time: beatsLength * 5 },
+  { note: "6", time: beatsLength * 6 },
+];
 
-sequenceOne.sendRowColor(1, "white");
-sequenceOne.sendRowColor(2, "white");
+let i = 0;
+while (i < 6) {
+  let osc = context.createOscillator();
+  osc.connect(context.destination);
+  osc.frequency.value = notes[i].note;
+  osc.start(start);
+  osc.stop(start + notes[i].time);
 
-sequenceTwo.sendRowColor(3, "black");
-sequenceTwo.sendRowColor(4, "black");
-
-sequenceThree.sendRowColor(5, "white");
-sequenceThree.sendRowColor(6, "white");
-
-sequenceFour.sendRowColor(7, "black");
-sequenceFour.sendRowColor(8, "black");
-
+  console.log("notes:", notes[i]);
+  i++;
+}
