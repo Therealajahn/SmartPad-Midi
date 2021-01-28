@@ -10,7 +10,9 @@ class AccessMIDI {
       for (input of access.inputs.values()) {
         midiInputs.push(input);
       }
+      console.log('midiInputs', midiInputs)
       return midiInputs;
+      
     });
   }
   getMIDIMessages() {
@@ -33,7 +35,7 @@ class AccessMIDI {
   }
   sendMIDI(message) {
     this.accessMIDIOutputs().then((outputs) => {
-      let firstOutput = outputs[0];
+      let firstOutput = outputs[1];
       firstOutput
         ? firstOutput.send(message)
         : console.log("controller not detected");

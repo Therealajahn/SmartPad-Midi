@@ -12,7 +12,8 @@ class Sequence {
   }
   //store sequence Number across instances
   static sequenceNum = 0;
-
+  static virtualPad = new VirtualSmartPad();
+  static initVirtualpad = this.virtualPad.createPadInit();
   incrementSequenceNumber() {
     Sequence.sequenceNum += 1;
   }
@@ -39,6 +40,8 @@ class Sequence {
     //send midi to pad
     this.accessMIDI.sendMIDI([128, padNumber, padColor]);
     this.accessMIDI.sendMIDI([144, padNumber, padColor]);
+    //send message to gui
+    //this.virtualPad.changePadColor(row, col);
   }
 
   advanceAlongWidthAndLength(widthStart, widthEnd, lengthStart, lengthEnd) {
