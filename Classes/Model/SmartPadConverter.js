@@ -40,7 +40,7 @@ class SmartPadConverter {
   getPadColumn(col) {
     return this.padCols[col];
   }
-  getPadRowAndColumn(row, col) {
+  getPadRowAndColumn(col, row) {
     return [this.padRows[row], this.padCols[col]];
   }
 }

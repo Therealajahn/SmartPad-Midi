@@ -1,0 +1,11 @@
+body{
+    background:#174C3B;
+    
+}
+#pad-base{
+    background:#1B2D48;
+    position:absolute;
+    margin-left: 50%;
+    transform: translateX(-250px);
+    padding: 0px;
+}
