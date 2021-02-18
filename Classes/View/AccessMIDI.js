@@ -10,9 +10,8 @@ class AccessMIDI {
       for (input of access.inputs.values()) {
         midiInputs.push(input);
       }
-      console.log('midiInputs', midiInputs)
+      console.log("midiInputs", midiInputs);
       return midiInputs;
-      
     });
   }
   getMIDIMessages() {
@@ -41,5 +40,4 @@ class AccessMIDI {
         : console.log("controller not detected");
     });
   }
- 
 }
