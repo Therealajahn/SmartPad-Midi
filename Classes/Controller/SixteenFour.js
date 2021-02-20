@@ -71,7 +71,8 @@ class SixteenFour {
   }
 
   advanceAllPlayheads() {
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < this.playheadArray.length; i++) {
+      console.log("PLAYHEAD ARRAY", this.playheadArray);
       this.playheadArray[i].advancePlayhead();
     }
     this.drawAllPlayheads();

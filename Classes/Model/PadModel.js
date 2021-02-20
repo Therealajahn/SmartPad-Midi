@@ -2,9 +2,9 @@ class PadModel {
   constructor() {
     this.padModel = {
       1: [
-        { background: "white", trigger: false, void: false, playhead: false },
-        { background: "2", trigger: false, void: false, playhead: false },
-        { background: "3", trigger: false, void: false, playhead: false },
+        { background: "", trigger: false, void: false, playhead: false },
+        { background: "", trigger: false, void: false, playhead: false },
+        { background: "", trigger: false, void: false, playhead: false },
         { background: "", trigger: false, void: false, playhead: false },
         { background: "", trigger: false, void: false, playhead: false },
         { background: "", trigger: false, void: false, playhead: false },
@@ -12,8 +12,8 @@ class PadModel {
         { background: "", trigger: false, void: false, playhead: false },
       ],
       2: [
-        { background: "9", trigger: false, void: false, playhead: false },
-        { background: "10", trigger: false, void: false, playhead: false },
+        { background: "", trigger: false, void: false, playhead: false },
+        { background: "", trigger: false, void: false, playhead: false },
         { background: "", trigger: false, void: false, playhead: false },
         { background: "", trigger: false, void: false, playhead: false },
         { background: "", trigger: false, void: false, playhead: false },

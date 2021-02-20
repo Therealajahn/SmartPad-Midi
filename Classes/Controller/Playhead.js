@@ -13,7 +13,7 @@ class Playhead {
 
   createPlayheadPath() {
     //create 2d array of pad coordinates
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < this.tapeLength / 8; i++) {
       for (let j = 0; j < 8; j++) {
         this.playheadPath.push([j + this.colStart, i + this.rowStart]);
       }
