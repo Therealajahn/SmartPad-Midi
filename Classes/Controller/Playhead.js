@@ -10,7 +10,7 @@ class Playhead {
   }
 
   //create a playhead id that will be incremented every time a playhead is created
-
+ 
   createPlayheadPath() {
     //create 2d array of pad coordinates
     for (let i = 0; i < this.tapeLength / 8; i++) {

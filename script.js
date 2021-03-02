@@ -29,15 +29,17 @@ console.log("padModel", padModel);
 let sequences = new SixteenFour(
   [
     playhead1,
-    // playhead2, playhead3, playhead4
+    playhead2,
+    playhead3,
+    playhead4
   ],
   padModel
 );
 sequences.createAlternatingRows();
 sequences.drawAllPlayheads();
 
-// setInterval(() => {
+//setInterval(() => {
 //   sequences.advanceAllPlayheads();
-// }, 500);
+//}, 500);
 
 console.log("PADMODEL", padModel);

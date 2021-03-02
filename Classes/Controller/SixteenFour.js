@@ -1,5 +1,5 @@
 class SixteenFour {
-  constructor(/*[playlistArray],padModel*/) {
+  constructor(/*[playheadArray],padModel*/) {
     this.smartPadConverter = new SmartPadConverter();
     this.accessMIDI = new AccessMIDI();
     this.virtualPad = new VirtualSmartPad();
