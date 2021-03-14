@@ -1,10 +1,4 @@
-//convert bpm to seconds
-let tempo = 60;
-let tempoToSeconds = tempo / 60;
-//So, how do I want to do timing?
-
 let audioContext = new AudioContext();
-let currentTime = audioContext.currentTime;
 
 // create oscillators
 function makeOscillator() {
@@ -18,12 +12,12 @@ function makeOscillator() {
 let [osc1, gain1] = makeOscillator();
 // make array of steps to play
 let steps = [
-  { note: 400, time: 4, attack: 0, decay: 1 },
-  { note: 300, time: 4, attack: 0, decay: 1 },
+  { note: 400, time: 1, attack: 0, decay: 1 },
+  { note: 300, time: 2, attack: 0, decay: 1 },
   { note: 100, time: 4, attack: 0.5, decay: 0.6 },
-  { note: 400, time: 4, attack: 0, decay: 1 },
-  { note: 200, time: 4, attack: 0.2, decay: 0.75 },
-  { note: 100, time: 4, attack: 0, decay: 1 },
+  { note: 400, time: 5, attack: 0, decay: 1 },
+  { note: 200, time: 6, attack: 0.2, decay: 0.75 },
+  { note: 100, time: 7, attack: 0, decay: 1 },
 ];
 // use array to schedule pitch change
 function attackDecay(attackTime = 0, decayTime = 1, time) {
@@ -33,15 +27,14 @@ function attackDecay(attackTime = 0, decayTime = 1, time) {
 }
 function playNoteList(steps) {
   console.log("playNOteRun");
-  let playTime = currentTime;
+  let playTime = audioContext.currentTime;
+  osc1.start();
   //if time is zero play note at the first second
   steps.forEach((step) => {
-    console.log("currentTime", audioContext.currentTime);
-    console.log("playTime", tempoToSeconds + playTime);
-
+    console.log("step-note", step.note);
+    console.log("step-time", step.time);
     osc1.frequency.setValueAtTime(step.note, step.time);
-    attackDecay(0, playTime);
-
+    attackDecay(step.attack, step.decay, step.time);
     playTime++;
   });
   //if time is 4 play a note every quarter note
