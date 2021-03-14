@@ -1,1 +1,1 @@
-Please check the timing branch.
+Please check out the timing branch.
