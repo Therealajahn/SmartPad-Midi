@@ -1,3 +1,5 @@
+let audioContext = new AudioContext();
+
 let padModel = new PadModel();
 
 let playhead1 = new Playhead({
@@ -27,19 +29,18 @@ let playhead4 = new Playhead({
 
 console.log("padModel", padModel);
 let sequences = new SixteenFour(
-  [
-    playhead1,
-    playhead2,
-    playhead3,
-    playhead4
-  ],
+  [playhead1, playhead2, playhead3, playhead4],
   padModel
 );
 sequences.createAlternatingRows();
 sequences.drawAllPlayheads();
 
-//setInterval(() => {
+let timer = new Repeater(() => {
+  sequences.advanceAllPlayheads();
+}, audioContext);
+
+// setInterval(() => {
 //   sequences.advanceAllPlayheads();
-//}, 500);
+// }, 500);
 
 console.log("PADMODEL", padModel);

@@ -10,7 +10,7 @@ class Playhead {
   }
 
   //create a playhead id that will be incremented every time a playhead is created
- 
+
   createPlayheadPath() {
     //create 2d array of pad coordinates
     for (let i = 0; i < this.tapeLength / 8; i++) {
@@ -35,13 +35,11 @@ class Playhead {
   getPastPlayhead() {
     //when playhead is incremented, return past playhead coordinates
     let path = this.playheadPath;
-    console.log("path", path);
+
     let position = this.playheadPosition;
-    console.log("position", position);
 
     let pastPlayhead =
       position === 0 ? path[path.length - 1] : path[position - 1];
-    console.log("pastPlayhead", pastPlayhead);
 
     this.padModel.updateModel({
       col: pastPlayhead[0],
@@ -59,9 +57,7 @@ class Playhead {
     if (!this.playheadPosition) {
       return [this.colStart, this.rowStart];
     }
-    // console.log('playhead path',this.playheadPath);
-    // console.log('playhead position in getPlayhead:', this.playheadPosition)
-    // console.log('playheadCoordinates in getPlayhead', this.playheadCoordinates)
+
     return this.playheadPath[this.playheadPosition];
   }
 }

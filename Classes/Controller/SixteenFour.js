@@ -6,9 +6,7 @@ class SixteenFour {
     this.playheadArray = arguments[0];
     this.padModel = arguments[1];
   }
-  printPlayheads() {
-    console.log("Playhead Array:", this.playheadArray);
-  }
+
   changePadColor(col, row, color) {
     //convert color to midi
     let padColor = this.smartPadConverter.getPadColor(color);
@@ -71,8 +69,8 @@ class SixteenFour {
   }
 
   advanceAllPlayheads() {
+    console.log("ADVANCE PLAY");
     for (let i = 0; i < this.playheadArray.length; i++) {
-      console.log("PLAYHEAD ARRAY", this.playheadArray);
       this.playheadArray[i].advancePlayhead();
     }
     this.drawAllPlayheads();
