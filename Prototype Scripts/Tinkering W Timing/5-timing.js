@@ -58,7 +58,7 @@ function triggerMusicalEvents() {
   beat++;
 }
 
-playNotes(3, steps);
+playNotes(60, steps);
 
 function playNotes(interval, notes) {
   let frames = 0;

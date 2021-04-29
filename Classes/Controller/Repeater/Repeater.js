@@ -6,6 +6,7 @@ class Repeater {
     this.task = task;
 
     this.tempo = 60;
+    this.beatValue = "quarter";
     this.eventSpace;
     this.nextEventTime;
     this.lastEventTime = 0;
@@ -14,11 +15,11 @@ class Repeater {
 
     this.steps = [
       { note: 100, time: 4, attack: 0.002, decay: 1 },
-      { note: 50, time: 4, attack: 0.002, decay: 1 },
-      { note: 40, time: 4, attack: 0.002, decay: 1 },
-      { note: 60, time: 4, attack: 0.002, decay: 1 },
+      { note: 100, time: 4, attack: 0.002, decay: 1 },
+      { note: 100, time: 4, attack: 0.002, decay: 1 },
+      { note: 100, time: 4, attack: 0.002, decay: 1 },
 
-      { note: 65, time: 4, attack: 0.2, decay: 1 },
+      { note: 100, time: 4, attack: 0.2, decay: 1 },
       { note: 30, time: 4, attack: 0.002, decay: 1 },
       { note: 30, time: 4, attack: 0.002, decay: 1 },
       { note: 45, time: 4, attack: 0.002, decay: 1 },
@@ -70,32 +71,30 @@ class Repeater {
     console.log("BETA", this.beat);
     this.beat++;
   }
+  scheduleEvents() {
+    //use frame count to trigger shedule events
 
-  playNotes(interval) {
-    let frames = 0;
-
-    function scheduleEvents() {
-      //use frame count to trigger shedule events
-      if (frames % interval === 0) {
-        this.eventSpace = (60 / this.tempo) * 0.25;
-        this.nextEventTime = this.eventSpace + this.lastEventTime;
-        if (
-          this.audioContext.currentTime >
-          this.nextEventTime - this.scheduleWindow
-        ) {
-          this.triggerMusicalEvents();
-          this.advance;
-          if (this.task) {
-            console.log("TASK RUN");
-            this.task();
-          }
-        }
-      }
-
-      //count frames
-      frames += 1;
-      requestAnimationFrame(scheduleEvents.bind(this));
+    console.log("EVENTS QS");
+    this.eventSpace = (60 / this.tempo) * 0.25;
+    this.nextEventTime = this.eventSpace + this.lastEventTime;
+    if (
+      this.audioContext.currentTime >
+      this.nextEventTime - this.scheduleWindow
+    ) {
+      this.triggerMusicalEvents();
     }
-    requestAnimationFrame(scheduleEvents.bind(this));
+  }
+  playNotes(interval) {
+    let worker = new Worker("Classes/Controller/Repeater/repeaterWorker.js");
+    worker.postMessage(["start", this.tempo, this.beatValue]);
+    worker.addEventListener("message", (e) => {
+      console.log("TIMER OUTPUT", e.data);
+      if (e.data === "tick gui") {
+        this.task();
+      }
+      if (e.data === "tick") {
+        this.scheduleEvents();
+      }
+    });
   }
 }
