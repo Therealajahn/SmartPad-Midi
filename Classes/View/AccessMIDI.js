@@ -32,9 +32,19 @@ class AccessMIDI {
       return midiOutputs;
     });
   }
+  sendSmartPad(message) {
+    // this.accessMIDIOutputs().then((outputs) => {
+    //   let firstOutput = outputs[1];
+    //   console.log("MIDI", message);
+    //   firstOutput
+    //     ? firstOutput.send(message)
+    //     : console.log("controller not detected");
+    // });
+  }
   sendMIDI(message) {
     this.accessMIDIOutputs().then((outputs) => {
       let firstOutput = outputs[1];
+      console.log("MIDI", message);
       firstOutput
         ? firstOutput.send(message)
         : console.log("controller not detected");

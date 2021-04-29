@@ -2,6 +2,8 @@ class Repeater {
   //NOTE: Repeater is doing things it shouldn't like producing oscillators
   //and envelopes, they will be removed laters
   constructor(task, audioContext) {
+    this.AccessMIDI = new AccessMIDI();
+
     this.audioContext = audioContext;
     this.task = task;
 
@@ -12,6 +14,7 @@ class Repeater {
     this.lastEventTime = 0;
     this.scheduleWindow = 0.1;
     this.beat = 0;
+    this.stepTriggered = false;
 
     this.steps = [
       { note: 100, time: 4, attack: 0.002, decay: 1 },
@@ -50,14 +53,15 @@ class Repeater {
   }
 
   attackDecay(target, attackTime, decayTime, time) {
-    target.gain.linearRampToValueAtTime(0.002, time);
-    target.gain.linearRampToValueAtTime(0.5, time + attackTime);
-    target.gain.linearRampToValueAtTime(0.0, time + decayTime);
+    target.gain.linearRampToValueAtTime(0.2, time);
+    target.gain.linearRampToValueAtTime(0.05, time + attackTime);
+    target.gain.linearRampToValueAtTime(0.2, time + decayTime);
   }
 
   triggerMusicalEvents() {
-    console.log("GAIN ONE", this.gain1);
     let currentStep = this.steps[this.beat % 16];
+
+    console.log("NEXT EVENT", this.nextEventTime);
     this.osc1.frequency.setValueAtTime(currentStep.note, this.nextEventTime);
     this.attackDecay(
       this.gain1,
@@ -68,30 +72,32 @@ class Repeater {
 
     this.lastEventTime += this.eventSpace;
 
-    console.log("BETA", this.beat);
     this.beat++;
+    this.AccessMIDI.sendMIDI([144, 80, 127]);
+    this.AccessMIDI.sendMIDI([128, 80, 127]);
+  }
+
+  triggerGuiEvents() {
+    this.task();
   }
   scheduleEvents() {
     //use frame count to trigger shedule events
 
-    console.log("EVENTS QS");
     this.eventSpace = (60 / this.tempo) * 0.25;
-    this.nextEventTime = this.eventSpace + this.lastEventTime;
+    this.nextEventTime = this.lastEventTime + this.eventSpace;
     if (
       this.audioContext.currentTime >
       this.nextEventTime - this.scheduleWindow
     ) {
+      this.stepTriggered = true;
       this.triggerMusicalEvents();
+      this.triggerGuiEvents();
     }
   }
-  playNotes(interval) {
+  playNotes() {
     let worker = new Worker("Classes/Controller/Repeater/repeaterWorker.js");
-    worker.postMessage(["start", this.tempo, this.beatValue]);
+    worker.postMessage("start");
     worker.addEventListener("message", (e) => {
-      console.log("TIMER OUTPUT", e.data);
-      if (e.data === "tick gui") {
-        this.task();
-      }
       if (e.data === "tick") {
         this.scheduleEvents();
       }

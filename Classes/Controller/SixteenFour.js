@@ -17,8 +17,8 @@ class SixteenFour {
     );
     let padNumber = padRow + padColumn;
     //send midi to pad
-    this.accessMIDI.sendMIDI([128, padNumber, padColor]);
-    this.accessMIDI.sendMIDI([144, padNumber, padColor]);
+    this.accessMIDI.sendSmartPad([128, padNumber, padColor]);
+    this.accessMIDI.sendSmartPad([144, padNumber, padColor]);
     //send message to gui
     this.virtualPad.changeVirtualPadColor(col, row, color);
   }
